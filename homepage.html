@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillSwap Connect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green:      #1B4332;
+      --green-mid:  #40916C;
+      --green-light:#D8F3DC;
+      --gold:       #B7791F;
+      --gold-light: #FEF9C3;
+      --cream:      #FAFAF7;
+      --ink:        #1A1A1A;
+      --muted:      #6B7280;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.4rem 5%;
+      background: rgba(250,250,247,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(27,67,50,0.08);
+    }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--gold); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .btn-nav {
+      background: var(--green);
+      color: #fff !important;
+      padding: 0.5rem 1.3rem;
+      border-radius: 2px;
+      font-weight: 500 !important;
+      letter-spacing: 0.04em !important;
+      transition: background 0.2s !important;
+    }
+
+    .btn-nav:hover { background: var(--green-mid) !important; color: #fff !important; }
+
+    /* ── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 7rem 5% 4rem;
+      gap: 4rem;
+    }
+
+    .hero-text { animation: fadeUp 0.9s ease both; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 300;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .btn-group { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border: none;
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--green-mid); transform: translateY(-1px); }
+
+    .btn-outline {
+      color: var(--green);
+      padding: 0.85rem 1.5rem;
+      border: 1px solid var(--green);
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-outline:hover { background: var(--green-light); }
+
+    /* ── HERO VISUAL ──────────────────────────────────────── */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUp 0.9s 0.2s ease both;
+    }
+
+    .card-stack {
+      position: relative;
+      width: 320px;
+      height: 400px;
+    }
+
+    .swap-card {
+      position: absolute;
+      width: 260px;
+      background: #fff;
+      border: 1px solid rgba(27,67,50,0.1);
+      border-radius: 4px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 24px rgba(27,67,50,0.08);
+    }
+
+    .swap-card:nth-child(1) { top: 0; left: 0; transform: rotate(-3deg); z-index: 1; }
+    .swap-card:nth-child(2) { top: 60px; left: 50px; transform: rotate(1.5deg); z-index: 2; }
+    .swap-card:nth-child(3) { top: 120px; left: 20px; z-index: 3; transform: rotate(-1deg); background: var(--green); color: #fff; border-color: transparent; }
+
+    .card-tag {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .swap-card:nth-child(3) .card-tag { color: var(--gold-light); opacity: 0.8; }
+
+    .card-skill {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 0.3rem;
+    }
+
+    .swap-card:nth-child(3) .card-skill { color: #fff; }
+
+    .card-user {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .swap-card:nth-child(3) .card-user { color: rgba(255,255,255,0.6); }
+
+    .card-badge {
+      display: inline-block;
+      margin-top: 0.8rem;
+      padding: 0.25rem 0.6rem;
+      background: var(--green-light);
+      color: var(--green);
+      border-radius: 2px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .swap-card:nth-child(3) .card-badge { background: rgba(255,255,255,0.15); color: #fff; }
+
+    /* ── STATS ROW ────────────────────────────────────────── */
+    .stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(27,67,50,0.1);
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+      font-weight: 400;
+    }
+
+    /* ── HOW IT WORKS ─────────────────────────────────────── */
+    .section {
+      padding: 6rem 5%;
+      background: #fff;
+      border-top: 1px solid rgba(27,67,50,0.06);
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      color: var(--green);
+      margin-bottom: 4rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .step { text-align: center; }
+
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--green-light);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 0.6rem;
+    }
+
+    .step p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── CTA STRIP ────────────────────────────────────────── */
+    .cta-strip {
+      padding: 5rem 5%;
+      background: var(--green);
+      text-align: center;
+    }
+
+    .cta-strip h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 300;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+
+    .cta-strip p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #fff;
+      padding: 0.9rem 2.2rem;
+      border: none;
+      border-radius: 2px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn-gold:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── FOOTER ───────────────────────────────────────────── */
+    footer {
+      padding: 2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(27,67,50,0.08);
+    }
+
+    footer .logo { font-size: 1.1rem; }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── ANIMATIONS ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; padding-top: 6rem; gap: 3rem; }
+      .hero-visual { justify-content: flex-start; }
+      .steps { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links { display: none; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">Skill<span>Swap</span></a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#">Browse Skills</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#" class="btn-nav">Get Started</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="eyebrow">Peer to Peer Learning</div>
+      <h1>Teach what you know.<br><em>Learn</em> what you don't.</h1>
+      <p class="hero-desc">
+        SkillSwap Connect matches students and learners for mutual skill exchange. No money, no pressure — just people helping each other grow.
+      </p>
+      <div class="btn-group">
+        <a href="#" class="btn-primary">Start Swapping</a>
+        <a href="#how" class="btn-outline">See How It Works</a>
+      </div>
+      <div class="stats">
+        <div>
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Skills Listed</div>
+        </div>
+        <div>
+          <div class="stat-num">84</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div>
+          <div class="stat-num">200+</div>
+          <div class="stat-label">Sessions Done</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="card-stack">
+        <div class="swap-card">
+          <div class="card-tag">Offering</div>
+          <div class="card-skill">Spanish Language</div>
+          <div class="card-user">Sara K. &mdash; Arts Faculty</div>
+          <div class="card-badge">Intermediate</div>
+        </div>
+        <div class="swap-card">
+          <div class="card-tag">Looking for</div>
+          <div class="card-skill">Graphic Design</div>
+          <div class="card-user">Ahmed R. &mdash; CS Faculty</div>
+          <div class="card-badge">Any Level</div>
+        </div>
+        <div class="swap-card">
+          <div class="card-tag">Matched!</div>
+          <div class="card-skill">Python + Guitar</div>
+          <div class="card-user">Session scheduled for Friday</div>
+          <div class="card-badge">Session Confirmed</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-label">Simple Process</div>
+    <h2 class="section-title">How SkillSwap Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Create Your Profile</h3>
+        <p>Sign up and list the skills you can teach alongside the skills you want to learn.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Get Matched</h3>
+        <p>Our system finds users whose skills complement yours perfectly for a fair exchange.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Schedule and Learn</h3>
+        <p>Book a session, connect via chat or video, and start exchanging knowledge.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-strip">
+    <h2>Ready to start learning for free?</h2>
+    <p>Join hundreds of students already swapping skills every week.</p>
+    <a href="#" class="btn-gold">Create a Free Account</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" class="logo">Skill<span>Swap</span></a>
+    <p>Built for Web Design and Development Theory &mdash; Umme Habiba</p>
+  </footer>
+
+</body>
+</html>
